@@ -4,7 +4,7 @@
   "description": "rest api connected to mysql through sequelize",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node ./index.js",
     "dev": "nodemon index.js"
   },
   "keywords": [
@@ -22,10 +22,10 @@
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.28.0",
-    "sequelize-cli": "^6.5.2"
+    "sequelize": "^6.28.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "sequelize-cli": "^6.5.2"
   }
 }
