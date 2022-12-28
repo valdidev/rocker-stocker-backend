@@ -4,7 +4,8 @@
   "description": "rest api connected to mysql through sequelize",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "express",
@@ -23,5 +24,8 @@
     "mysql2": "^2.3.3",
     "sequelize": "^6.28.0",
     "sequelize-cli": "^6.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
