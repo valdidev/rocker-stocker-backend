@@ -10,16 +10,34 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Sale.belongsTo(models.user)
     }
   }
   Sale.init({
-    id: DataTypes.INTEGER,
-    date: DataTypes.DATE,
-    total: DataTypes.DECIMAL
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    total: {
+      type: DataTypes.DECIMAL,
+      allowNull: false
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'user',
+        key: 'id',
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Sale',
+    modelName: 'sale',
   });
   return Sale;
 };
