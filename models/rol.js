@@ -18,10 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     membership: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         len: [1, 20]
       }

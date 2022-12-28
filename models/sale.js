@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Sale.belongsTo(models.user)
+      Sale.belongsToMany(models.article, {through: 'ArticleSales'})
+
     }
   }
   Sale.init({
@@ -28,12 +30,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL,
       allowNull: false
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
-      references: {
-        model: 'user',
-        key: 'id',
-      }
+      allowNull: false
     }
   }, {
     sequelize,

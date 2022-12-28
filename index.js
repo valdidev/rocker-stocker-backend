@@ -1,5 +1,6 @@
 const express = require('express');
 
+const { sequelize } = require('./models');
 
 const db = require('./db/db');
 
@@ -33,7 +34,8 @@ app.post("/welcome", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 
-    db.authenticate().then(() => {
+    // sequelize.sync({force: true}).then(() => {
+    sequelize.authenticate().then(() => {
         console.log('DB Connected')
     }).catch(error => {
         console.log('Something went wrong when connecting to the DB: ' + error)
