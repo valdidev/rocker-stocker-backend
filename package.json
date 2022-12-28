@@ -1,0 +1,17 @@
+{
+  "name": "rocker-stocker-backend",
+  "version": "0.0.1",
+  "description": "rest api connected to mysql through sequelize",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "api",
+    "mysql",
+    "sequelize"
+  ],
+  "author": "Fernando Valdivielso - @valdidev",
+  "license": "MIT"
+}
