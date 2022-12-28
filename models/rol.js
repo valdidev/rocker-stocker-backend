@@ -14,11 +14,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Rol.init({
-    id: DataTypes.INTEGER,
-    membership: DataTypes.STRING
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    membership: {
+      type: DataTypes.STRING,
+      validate: {
+        len: [1, 20]
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Rol',
+    modelName: 'rol'
   });
   return Rol;
 };
