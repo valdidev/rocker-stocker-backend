@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Article.belongsTo(models.product)
       Article.belongsToMany(models.sale, {through: 'ArticleSales'})
       Article.belongsTo(models.user)
     }
@@ -21,6 +20,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    brand: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     price: {
       type: DataTypes.DECIMAL,
@@ -42,10 +53,6 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         len: [13]
       }
-    },
-    productId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     },
     userId: {
       type: DataTypes.INTEGER,
