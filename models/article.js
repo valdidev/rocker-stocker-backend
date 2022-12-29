@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     ean: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       defaultValue: true,
       allowNull: false,
       validate: {
