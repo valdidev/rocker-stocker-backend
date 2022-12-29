@@ -3,15 +3,13 @@ const jsonwebtoken = require('jsonwebtoken');
 const {
     assertValidPassword,
     assertEmailIsValid,
-    encryptPassword,
-    assertEmailIsUnique } = require('../services/auth.services');
+    encryptPassword
+} = require('../services/auth.services');
 
 // REGISTER
 const authRegisterController = async (req, res) => {
     try {
-
         let userBody = req.body;
-
         let password = userBody.password;
         let email = userBody.email;
 
@@ -40,8 +38,7 @@ const authRegisterController = async (req, res) => {
             surname: userBody.surname,
             phone: userBody.phone
         });
-
-        res.send(`The user with email: ${email} has been created successfully`)
+        res.status(200).json({ message: `The user with email: ${email} has been created successfully` });
     } catch (error) {
         res.send(error);
     }
@@ -49,7 +46,42 @@ const authRegisterController = async (req, res) => {
 
 // LOGIN
 const authLoginController = async (req, res) => {
-    res.send('login controller')
+    let userBody = req.body;
+    let password = userBody.password;
+    let email = userBody.email;
+
+    const userFound = await models.user.findOne({
+        where: { email: email, }
+    });
+
+    if (!userFound) {
+        res.status(400).json({ message: 'Wrong email or password' });
+        return;
+    }
+
+    const hashedPassword = encryptPassword(password);
+    if (hashedPassword !== userFound.password) {
+        res.status(400).json({ message: 'Wrong email or password' });
+        return;
+    }
+
+    const secret = process.env.JWT_SECRET || '';
+
+    if (secret.length < 10) {
+        throw new Error("JWT_SECRET is not set");
+    }
+
+    const jwt = jsonwebtoken.sign({
+        userId: userFound.id,
+        name: userFound.name,
+        email: userFound.email,
+        rolId: userFound.rolId
+    }, secret);
+
+    res.status(200).json({
+        message: "Successfully logged in",
+        jwt: jwt,
+    });
 };
 
 module.exports = {
