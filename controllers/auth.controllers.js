@@ -17,7 +17,7 @@ const authRegisterController = async (req, res) => {
         try {
             assertValidPassword(password);
         } catch (error) {
-            res.status(400).json({ message: `Password is invalid: ${error.message}` });
+            res.status(400).json({ message: `Invalid format password: ${error.message}` });
             return;
         }
 
@@ -38,7 +38,7 @@ const authRegisterController = async (req, res) => {
             surname: userBody.surname,
             phone: userBody.phone
         });
-        res.status(200).json({ message: `The user with email: ${email} has been created successfully` });
+        res.status(200).json({message: "User created successfully" });
     } catch (error) {
         res.send(error);
     }
