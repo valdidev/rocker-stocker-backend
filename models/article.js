@@ -10,18 +10,50 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Article.belongsTo(models.product)
+      Article.belongsToMany(models.sale, {through: 'ArticleSales'})
+      Article.belongsTo(models.user)
     }
   }
   Article.init({
-    id: DataTypes.INTEGER,
-    price: DataTypes.DECIMAL,
-    units: DataTypes.INTEGER,
-    stock: DataTypes.BOOLEAN,
-    ean: DataTypes.INTEGER
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    units: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    stock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false,
+    },
+    ean: {
+      type: DataTypes.INTEGER,
+      defaultValue: true,
+      allowNull: false,
+      validate: {
+        len: [13]
+      }
+    },
+    productId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
-    modelName: 'Article',
+    modelName: 'article',
   });
   return Article;
 };

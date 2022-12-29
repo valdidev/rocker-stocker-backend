@@ -10,15 +10,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Rol.hasMany()
+      Rol.hasMany(models.user)
     }
   }
   Rol.init({
-    id: DataTypes.INTEGER,
-    membership: DataTypes.STRING
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    membership: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 20]
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Rol',
+    modelName: 'rol'
   });
   return Rol;
 };
