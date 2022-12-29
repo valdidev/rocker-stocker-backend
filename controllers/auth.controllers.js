@@ -1,28 +1,33 @@
 const models = require('../models/index');
 const jsonwebtoken = require('jsonwebtoken');
-const { assertValidPasswordService, assertEmailIsValid } = require('../services/auth.services');
+const {
+    assertValidPassword,
+    assertEmailIsValid,
+    encryptPassword,
+    assertEmailIsUnique } = require('../services/auth.services');
 
 // REGISTER
 const authRegisterController = async (req, res) => {
     try {
 
         let userBody = req.body;
+
         let password = userBody.password;
         let email = userBody.email;
 
+        // valid format password
         try {
-            assertValidPasswordService(password);
+            assertValidPassword(password);
         } catch (error) {
-            res.status(400).json({
-                message: `Invalid password. Password must be at least 8 characters long, must have at least one lower case letter, must have at least one upper case letter must have at least one number  ${error.message}`,
-            });
+            res.status(400).json({ message: `Password is invalid: ${error.message}` });
             return;
         }
 
+        // valid format email
         try {
             assertEmailIsValid(email);
         } catch (error) {
-            res.status(400).json({ message: `Email is invalid: ${error.message}` });
+            res.status(400).json({ message: error.message });
             return;
         }
 
@@ -30,12 +35,12 @@ const authRegisterController = async (req, res) => {
 
         await models.user.create({
             email: userBody.email,
+            password: hash,
             name: userBody.name,
             surname: userBody.surname,
-            password: hash,
-            document: userBody.document,
-            address: userBody.address,
+            phone: userBody.phone
         });
+
         res.send(`The user with email: ${email} has been created successfully`)
     } catch (error) {
         res.send(error);

@@ -1,6 +1,7 @@
 const crypto = require("node:crypto");
+const models = require("../models/index");
 
-const assertValidPasswordService = (pass) => {
+const assertValidPassword = (pass) => {
     if (pass.length < 8) {
         throw new Error("Password must be at least 8 characters long");
     }
@@ -28,7 +29,16 @@ const assertEmailIsValid = (email) => {
     }
 };
 
+const encryptPassword = (password) => {
+    const hash = crypto
+      .createHmac("sha512", "no salt for now // TODO: REALLY NEED TO ADD SALT?")
+      .update(password)
+      .digest("base64");
+    return hash;
+  };
+
 module.exports = {
-    assertValidPasswordService,
+    assertValidPassword,
     assertEmailIsValid,
+    encryptPassword,
 };
