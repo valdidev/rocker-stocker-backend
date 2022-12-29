@@ -41,18 +41,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    stock: {
+    InStock: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
       allowNull: false,
     },
     ean: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       defaultValue: true,
       allowNull: false,
       validate: {
         len: [13]
       }
+    },
+    IsVisible: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
