@@ -2,15 +2,14 @@ const router = require('express').Router();
 const {
     addArticleController,
     modifyArticleByIdController,
-    chArticleVisibilityByIdController } = require('../controllers/article.controllers');
+    chArticleVisibilityByIdController,
+    deleteArticleByIdController } = require('../controllers/article.controllers');
 
 
 router.post('/add', addArticleController);
-// mvp
 router.put('/modify/:id', modifyArticleByIdController);
 router.patch('/visibility/:id', chArticleVisibilityByIdController);
-
-router.delete('/delete', (req, res) => { res.send('borrar un artículo') });
+router.delete('/delete/:id', deleteArticleByIdController);
 
 
 // deluxe
