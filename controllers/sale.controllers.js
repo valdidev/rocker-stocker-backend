@@ -40,6 +40,16 @@ const makeSaleController = async (req, res) => {
     }
 }
 
+const getSalesByUserIdController = async (req, res) => {
+    res.send('get sales user')
+};
+
+const getAllSalesController = async (req, res) => {
+    res.send('get all sales user')
+};
+
 module.exports = {
     makeSaleController,
-}
+    getSalesByUserIdController,
+    getAllSalesController
+};
