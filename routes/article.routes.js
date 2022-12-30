@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const { addArticleController } = require('../controllers/article.controllers');
+const { addArticleController, modifyArticleByIdController } = require('../controllers/article.controllers');
 
 
 router.post('/add', addArticleController);
 // mvp
-router.put('/modify', (req, res) => {res.send('modificar un artículo')});
+router.put('/modify/:id', modifyArticleByIdController);
 router.delete('/delete', (req, res) => {res.send('borrar un artículo')});
 router.patch('/visibility', (req, res) => {res.send('modificar visibilidad artículo')});
 
