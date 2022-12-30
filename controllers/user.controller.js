@@ -1,6 +1,10 @@
 const models = require('../models/index');
 const jsonwebtoken = require('jsonwebtoken');
 
+const getAllUsersController = async (req, res) => {
+    res.send('todos users')
+}
+
 const toggleAdminRoleController = async (req, res) => {
     try {
         const { userId } = req.body;
@@ -33,5 +37,6 @@ const toggleAdminRoleController = async (req, res) => {
 };
 
 module.exports = {
-    toggleAdminRoleController
+    toggleAdminRoleController,
+    getAllUsersController
 }
