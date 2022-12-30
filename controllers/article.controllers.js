@@ -20,7 +20,7 @@ const addArticleController = async (req, res) => {
 
         res.status(200).json({ message: "Article added successfully" });
     } catch (error) {
-        res.send(error);
+        res.status(500).json({ message: "Something went wrong: ", error});
     }
 };
 
@@ -53,7 +53,7 @@ const modifyArticleByIdController = async (req, res) => {
         res.status(200).json({ message: "Article modified successfully" });
 
     } catch (error) {
-        res.send(error);
+        res.status(500).json({ message: "Something went wrong: ", error});
     }
 };
 
