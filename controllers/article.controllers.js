@@ -24,7 +24,7 @@ const addArticleController = async (req, res) => {
     }
 };
 
-const getArticleById = async (req, res) => {
+const getArticleByIdController = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -125,5 +125,5 @@ module.exports = {
     modifyArticleByIdController,
     chArticleVisibilityByIdController,
     deleteArticleByIdController,
-    getArticleById
+    getArticleByIdController
 }
