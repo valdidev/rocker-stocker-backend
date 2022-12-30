@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    InStock: {
+    inStock: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
       allowNull: false,
@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         len: [13]
       }
     },
-    IsVisible: {
+    isVisible: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
       allowNull: false,

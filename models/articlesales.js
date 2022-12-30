@@ -22,7 +22,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     articleId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      unique: false
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1
     },
     saleId: {
       type: DataTypes.INTEGER,
