@@ -41,7 +41,31 @@ const makeSaleController = async (req, res) => {
 }
 
 const getSalesByUserIdController = async (req, res) => {
-    res.send('get sales user')
+
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+    const articleBody = req.body;
+
+    try {
+        const { userId } = payload;
+
+        const salesFounded = await models.sale.findAll({
+            where: {
+                userId
+            }
+        });
+
+        if (!salesFounded) {
+            res.status(404).json({ message: 'Sales not found' });
+            return;
+        }
+
+        res.status(200).json({ message: 'Sales founded', data: salesFounded });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
 };
 
 const getAllSalesController = async (req, res) => {
