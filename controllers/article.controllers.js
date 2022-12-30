@@ -57,7 +57,33 @@ const modifyArticleByIdController = async (req, res) => {
     }
 };
 
+const chArticleVisibilityByIdController = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        
+        const articleFounded = await models.article.findByPk(id);
+
+        if (!articleFounded) {
+            res.status(404).json({ message: 'Article not found' });
+            return;
+        }
+
+        await articleFounded.update({
+            IsVisible: !articleFounded.IsVisible
+        });
+
+        let visibleStatus = (articleFounded.IsVisible) ? "visible" : "hidden"
+
+        res.status(200).json({ message: `Article modified to ${visibleStatus}` });
+
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong: ", error});
+    }
+};
+
 module.exports = {
     addArticleController,
     modifyArticleByIdController,
+    chArticleVisibilityByIdController,
 }
