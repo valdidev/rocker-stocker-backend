@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     articleId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      unique: false
     },
     saleId: {
       type: DataTypes.INTEGER,
