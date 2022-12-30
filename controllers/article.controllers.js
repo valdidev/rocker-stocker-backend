@@ -42,6 +42,24 @@ const getArticleByIdController = async (req, res) => {
     }
 };
 
+const getArticleByEanController = async (req, res) => {
+    try {
+        const { ean } = req.params;
+
+        const articleFounded = await models.article.findOne({where: {ean}})
+
+        if (!articleFounded || !articleFounded.isVisible) {
+            res.status(404).json({ message: 'Article not found' });
+            return;
+        }
+
+        res.status(200).json({ message: 'Article founded', data: articleFounded });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
+}
+
 const modifyArticleByIdController = async (req, res) => {
     const { authorization } = req.headers;
     const [strategy, jwt] = authorization.split(" ");
@@ -125,5 +143,6 @@ module.exports = {
     modifyArticleByIdController,
     chArticleVisibilityByIdController,
     deleteArticleByIdController,
-    getArticleByIdController
+    getArticleByIdController,
+    getArticleByEanController
 }

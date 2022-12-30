@@ -4,11 +4,13 @@ const {
     modifyArticleByIdController,
     chArticleVisibilityByIdController,
     deleteArticleByIdController, 
-    getArticleByIdController} = require('../controllers/article.controllers');
+    getArticleByIdController,
+    getArticleByEanController} = require('../controllers/article.controllers');
 
 
 router.post('/add', addArticleController);
 router.get('/see/:id', getArticleByIdController);
+router.get('/ean/:ean', getArticleByEanController);
 router.put('/modify/:id', modifyArticleByIdController);
 router.patch('/visibility/:id', chArticleVisibilityByIdController);
 router.delete('/delete/:id', deleteArticleByIdController);
