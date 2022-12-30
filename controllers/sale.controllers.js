@@ -9,7 +9,7 @@ const makeSaleController = async (req, res) => {
     const todaysDate = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
 
     try {
-        
+
         const saleMade = await models.sale.create({
             date: todaysDate,
             total: saleBody[0].total,
@@ -17,7 +17,6 @@ const makeSaleController = async (req, res) => {
         });
 
         const cart = saleBody[1].cart;
-
 
         cart.map(async function (item) {
 
@@ -33,8 +32,6 @@ const makeSaleController = async (req, res) => {
         });
 
         await models.ArticleSales.bulkCreate(cart);
-
-
 
         res.status(200).json({ message: "Sale maked successfully" });
 
