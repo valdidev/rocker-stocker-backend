@@ -88,10 +88,10 @@ const chArticleVisibilityByIdController = async (req, res) => {
         }
 
         await articleFounded.update({
-            IsVisible: !articleFounded.IsVisible
+            isVisible: !articleFounded.isVisible
         });
 
-        let visibleStatus = (articleFounded.IsVisible) ? "visible" : "hidden"
+        let visibleStatus = (articleFounded.isVisible) ? "visible" : "hidden"
 
         res.status(200).json({ message: `Article modified to ${visibleStatus}` });
 
