@@ -18,17 +18,21 @@ const makeSaleController = async (req, res) => {
 
         const cart = saleBody[1].cart;
 
-        cart.map(item => {
+        cart.map(async function (item) {
+
             item.saleId = saleMade.id
-        })
+
+            if (item.quantity) {
+                const article = await models.article.findByPk(item.articleId)
+                await article.decrement('units', { by: item.quantity })
+            } else {
+                const article = await models.article.findByPk(item.articleId)
+                await article.decrement('units')
+            }
+        });
 
         await models.ArticleSales.bulkCreate(cart);
 
-        /* let articleAffected = await models.article.findOne({ where: { id: saleBody.articleId } })
-
-       await articleAffected.decrement('units');  */
-
-        // res.status(200).json(newSale);
         res.status(200).json({ message: "Sale maked successfully" });
 
     } catch (error) {
