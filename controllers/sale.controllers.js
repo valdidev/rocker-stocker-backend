@@ -9,21 +9,26 @@ const makeSaleController = async (req, res) => {
     const todaysDate = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`
 
     try {
-        let entireSale = await models.sale.create({
+
+        const saleMade = await models.sale.create({
             date: todaysDate,
-            total: saleBody.total,
+            total: saleBody[0].total,
             userId: payload.userId
         });
 
-        await models.ArticleSales.create({
-            articleId: saleBody.articleId,
-            saleId: entireSale.id
+        const cart = saleBody[1].cart;
+
+        cart.map(item => {
+            item.saleId = saleMade.id
         })
 
-        let articleAffected = await models.article.findOne({ where: { id: saleBody.articleId } })
+        await models.ArticleSales.bulkCreate(cart);
 
-        await articleAffected.decrement('units');
+        /* let articleAffected = await models.article.findOne({ where: { id: saleBody.articleId } })
 
+       await articleAffected.decrement('units');  */
+
+        // res.status(200).json(newSale);
         res.status(200).json({ message: "Sale maked successfully" });
 
     } catch (error) {

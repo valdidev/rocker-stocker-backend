@@ -3,6 +3,7 @@ const app = express();
 const { sequelize } = require('./models');
 const db = require('./db/db');
 const router = require('./router');
+const bp = require('body-parser');
 
 
 // const cors = require('cors');
@@ -18,7 +19,8 @@ const router = require('./router');
 let PORT = process.env.YOUR_PORT || process.env.PORT || 3000;
 
 // app.use(cors(corsOptions));
-app.use(express.json());
+app.use(bp.json());
+app.use(bp.urlencoded({extended: true}))
 app.use(router);
 
 app.listen(PORT, () => {
