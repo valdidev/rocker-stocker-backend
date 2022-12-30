@@ -58,7 +58,7 @@ const getArticleByEanController = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong', error });
     }
-}
+};
 
 const modifyArticleByIdController = async (req, res) => {
     const { authorization } = req.headers;
