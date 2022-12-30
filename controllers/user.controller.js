@@ -2,7 +2,23 @@ const models = require('../models/index');
 const jsonwebtoken = require('jsonwebtoken');
 
 const getAllUsersController = async (req, res) => {
-    res.send('todos users')
+    try {
+        const usersFounded = await models.user.findAll();
+
+        if (!usersFounded) {
+            res.status(404).json({ message: 'Users not found' });
+            return;
+        }
+
+        usersFounded.forEach(user => {
+            user.password = '-hidden-'
+        });
+
+        res.status(200).json({ message: 'Users founded', data: usersFounded });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
 }
 
 const toggleAdminRoleController = async (req, res) => {
