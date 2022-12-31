@@ -38,7 +38,7 @@ module.exports = {
         updatedAt: currentDate
       },
       {
-        id: 4,
+        id: 3,
         name: "Gaspar",
         surname: "Lopez",
         email: "glopez@rockerstocker.com",
@@ -50,7 +50,7 @@ module.exports = {
         updatedAt: currentDate
       },
       {
-        id: 5,
+        id: 4,
         name: "Sonia",
         surname: "Molina",
         email: "smolina@rockerstocker.com",
