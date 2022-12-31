@@ -18,9 +18,9 @@ const addArticleController = async (req, res) => {
             userId: payload.userId
         })
 
-        res.status(200).json({ message: "Article added successfully" });
+        res.status(200).json({ message: "Article added successfully", success: true });
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -31,14 +31,14 @@ const getArticleByIdController = async (req, res) => {
         const articleFounded = await models.article.findByPk(id);
 
         if (!articleFounded || !articleFounded.isVisible) {
-            res.status(404).json({ message: 'Article not found' });
+            res.status(404).json({ message: 'Article not found', success: false });
             return;
         }
 
-        res.status(200).json({ message: 'Article founded', data: articleFounded });
+        res.status(200).json({ message: 'Article founded', data: articleFounded, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -49,14 +49,14 @@ const getArticleByEanController = async (req, res) => {
         const articleFounded = await models.article.findOne({ where: { ean } })
 
         if (!articleFounded || !articleFounded.isVisible) {
-            res.status(404).json({ message: 'Article not found' });
+            res.status(404).json({ message: 'Article not found', success: false });
             return;
         }
 
-        res.status(200).json({ message: 'Article founded', data: articleFounded });
+        res.status(200).json({ message: 'Article founded', data: articleFounded, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -72,7 +72,7 @@ const modifyArticleByIdController = async (req, res) => {
         const articleFounded = await models.article.findByPk(id);
 
         if (!articleFounded) {
-            res.status(404).json({ message: 'Article not found' });
+            res.status(404).json({ message: 'Article not found', success: false });
             return;
         }
 
@@ -86,10 +86,10 @@ const modifyArticleByIdController = async (req, res) => {
             userId: payload.userId
         });
 
-        res.status(200).json({ message: "Article modified successfully" });
+        res.status(200).json({ message: "Article modified successfully", success: true });
 
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -101,7 +101,7 @@ const chArticleVisibilityByIdController = async (req, res) => {
         const articleFounded = await models.article.findByPk(id);
 
         if (!articleFounded) {
-            res.status(404).json({ message: 'Article not found' });
+            res.status(404).json({ message: 'Article not found', success: false });
             return;
         }
 
@@ -111,10 +111,10 @@ const chArticleVisibilityByIdController = async (req, res) => {
 
         let visibleStatus = (articleFounded.isVisible) ? "visible" : "hidden"
 
-        res.status(200).json({ message: `Article ${articleFounded.name} modified to ${visibleStatus}` });
+        res.status(200).json({ message: `Article ${articleFounded.name} modified to ${visibleStatus}`, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -125,16 +125,16 @@ const deleteArticleByIdController = async (req, res) => {
         const articleFounded = await models.article.findByPk(id);
 
         if (!articleFounded) {
-            res.status(404).json({ message: 'Article not found' });
+            res.status(404).json({ message: 'Article not found', success: false });
             return;
         }
 
         await articleFounded.destroy();
 
-        res.status(200).json({ message: `Article ${articleFounded.name} deleted successfully` });
+        res.status(200).json({ message: `Article ${articleFounded.name} deleted successfully`, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
