@@ -120,11 +120,16 @@ const toggleUserActiveController = async (req, res) => {
     }
 };
 
+const deleteUserController = async (req, res) => {
+    res.send('delete usser')
+};
+
 
 
 module.exports = {
     toggleAdminRoleController,
     getAllUsersController,
     modifyUserProfileController,
-    toggleUserActiveController
+    toggleUserActiveController,
+    deleteUserController
 }
