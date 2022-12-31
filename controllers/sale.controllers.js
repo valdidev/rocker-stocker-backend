@@ -88,18 +88,20 @@ const getSaleDetailsByIdController = async (req, res) => {
     try {
         const { saleId } = req.params;
 
-        const salesFounded = await models.ArticleSales.findAll({
+        const saleFounded = await models.ArticleSales.findAll({
             where: {
                 saleId
             }
         });
 
-        if (!salesFounded) {
-            res.status(404).json({ message: 'Sales not found' });
+        if (!saleFounded) {
+            res.status(404).json({ message: 'Sale not found' });
             return;
         }
 
-        res.status(200).json({ message: 'Sales founded', data: salesFounded });
+        console.log(saleFounded);
+
+        res.status(200).json({ message: `Sale id ${saleId} founded`, data: saleFounded });
 
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong', error });
