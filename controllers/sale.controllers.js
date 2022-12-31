@@ -69,7 +69,19 @@ const getSalesByUserIdController = async (req, res) => {
 };
 
 const getAllSalesController = async (req, res) => {
-    res.send('get all sales user')
+    try {
+        const salesFounded = await models.sale.findAll();
+
+        if (salesFounded.length === 0) {
+            res.status(404).json({ message: 'Sales not found' });
+            return;
+        }
+
+        res.status(200).json({ message: 'Sales founded', data: salesFounded });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
 };
 
 const getSaleDetailsByIdController = async (req, res) => {
