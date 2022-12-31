@@ -67,10 +67,10 @@ const authLoginController = async (req, res) => {
             return;
         }
 
-        const secret = process.env.JWT_SECRET || '';
+        let secret = process.env.JWT_SECRET || '';
 
         if (secret.length < 10) {
-            res.status(403).json({ message: 'Secret missing or too weak', success: false });
+            throw new Error('Secret missing or too weak');
         }
 
         const jwt = jsonwebtoken.sign({
