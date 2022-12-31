@@ -31,7 +31,7 @@ const assertEmailIsValid = (email) => {
 
 const encryptPassword = (password) => {
     const hash = crypto
-      .createHmac("sha512", "no salt for now // TODO: REALLY NEED TO ADD SALT?")
+      .createHmac("sha512", "no salt for now")
       .update(password)
       .digest("base64");
     return hash;
