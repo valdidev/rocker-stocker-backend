@@ -8,16 +8,19 @@ module.exports = {
 
     let currentDate = getCurrentDate()
 
-    await queryInterface.bulkInsert('rols', [{
-      id: 1, membership: "admin", createdAt: currentDate, updatedAt: currentDate,
-    },
-    { id: 2, membership: "user", createdAt: currentDate, updatedAt: currentDate, }
+    await queryInterface.bulkInsert('rols', [
+      {
+        id: 1, membership: "admin", createdAt: currentDate, updatedAt: currentDate,
+      },
+      {
+        id: 2, membership: "user", createdAt: currentDate, updatedAt: currentDate,
+      }
     ], {});
 
   },
 
   async down(queryInterface, Sequelize) {
-   await queryInterface.bulkDelete('rols', null, {});
-    
+    await queryInterface.bulkDelete('rols', null, {});
+
   }
 };
