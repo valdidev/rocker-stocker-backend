@@ -52,7 +52,7 @@ const toggleAdminRoleController = async (req, res) => {
     }
 };
 
-const modifyUserProfile = async (req, res) => {
+const modifyUserProfileController = async (req, res) => {
     const { authorization } = req.headers;
     const [strategy, jwt] = authorization.split(" ");
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
@@ -87,10 +87,13 @@ const modifyUserProfile = async (req, res) => {
     }
 };
 
+const toggleUserActiveController = () => {};
+
 
 
 module.exports = {
     toggleAdminRoleController,
     getAllUsersController,
-    modifyUserProfile
+    modifyUserProfileController,
+    toggleUserActiveController
 }
