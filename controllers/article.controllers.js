@@ -46,7 +46,7 @@ const getArticleByEanController = async (req, res) => {
     try {
         const { ean } = req.params;
 
-        const articleFounded = await models.article.findOne({where: {ean}})
+        const articleFounded = await models.article.findOne({ where: { ean } })
 
         if (!articleFounded || !articleFounded.isVisible) {
             res.status(404).json({ message: 'Article not found' });
@@ -111,7 +111,7 @@ const chArticleVisibilityByIdController = async (req, res) => {
 
         let visibleStatus = (articleFounded.isVisible) ? "visible" : "hidden"
 
-        res.status(200).json({ message: `Article modified to ${visibleStatus}` });
+        res.status(200).json({ message: `Article ${articleFounded.name} modified to ${visibleStatus}` });
 
     } catch (error) {
         res.status(500).json({ message: "Something went wrong: ", error });
@@ -131,7 +131,7 @@ const deleteArticleByIdController = async (req, res) => {
 
         await articleFounded.destroy();
 
-        res.status(200).json({ message: "Article deleted successfully" });
+        res.status(200).json({ message: `Article ${articleFounded.name} deleted successfully` });
 
     } catch (error) {
         res.status(500).json({ message: "Something went wrong: ", error });
