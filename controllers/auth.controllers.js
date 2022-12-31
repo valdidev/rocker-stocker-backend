@@ -17,7 +17,7 @@ const authRegisterController = async (req, res) => {
         try {
             assertValidPassword(password);
         } catch (error) {
-            res.status(400).json({ message: `Invalid format password: ${error.message}` });
+            res.status(400).json({ message: error.message });
             return;
         }
 
@@ -38,7 +38,8 @@ const authRegisterController = async (req, res) => {
             surname: userBody.surname,
             phone: userBody.phone
         });
-        res.status(200).json({message: "User created successfully" });
+
+        res.status(200).json({ message: "User created successfully", success: true });
     } catch (error) {
         res.send(error);
     }
@@ -46,41 +47,46 @@ const authRegisterController = async (req, res) => {
 
 // LOGIN
 const authLoginController = async (req, res) => {
-    let userBody = req.body;
-    let password = userBody.password;
-    let email = userBody.email;
+    try {
+        let userBody = req.body;
+        let password = userBody.password;
+        let email = userBody.email;
 
-    const userFound = await models.user.findOne({
-        where: { email: email, }
-    });
+        const userFound = await models.user.findOne({
+            where: { email: email, }
+        });
 
-    if (!userFound) {
-        res.status(400).json({ message: 'Wrong email or password' });
-        return;
+        if (!userFound) {
+            res.status(400).json({ message: 'Wrong email or password', success: false });
+            return;
+        }
+
+        const hashedPassword = encryptPassword(password);
+        if (hashedPassword !== userFound.password) {
+            res.status(400).json({ message: 'Wrong email or password', success: false });
+            return;
+        }
+
+        const secret = process.env.JWT_SECRET || '';
+
+        if (secret.length < 10) {
+            res.status(403).json({ message: 'Secret missing or too weak', success: false });
+        }
+
+        const jwt = jsonwebtoken.sign({
+            userId: userFound.id,
+            email: userFound.email,
+            rolId: userFound.rolId
+        }, secret);
+
+        res.status(200).json({
+            message: "Successfully logged in",
+            jwt: jwt,
+            success: true
+        });
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
-
-    const hashedPassword = encryptPassword(password);
-    if (hashedPassword !== userFound.password) {
-        res.status(400).json({ message: 'Wrong email or password' });
-        return;
-    }
-
-    const secret = process.env.JWT_SECRET || '';
-
-    if (secret.length < 10) {
-        throw new Error("JWT_SECRET is not set");
-    }
-
-    const jwt = jsonwebtoken.sign({
-        userId: userFound.id,
-        email: userFound.email,
-        rolId: userFound.rolId
-    }, secret);
-
-    res.status(200).json({
-        message: "Successfully logged in",
-        jwt: jwt,
-    });
 };
 
 module.exports = {
