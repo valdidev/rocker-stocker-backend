@@ -52,7 +52,45 @@ const toggleAdminRoleController = async (req, res) => {
     }
 };
 
+const modifyUserProfile = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+
+
+    if (req.body.email !== payload.email) {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    try {
+
+        let data = req.body;
+
+        await models.user.update({
+            name: data.name,
+            surname: data.surname,
+            phone: data.phone
+        }, { where: { email: data.email } });
+
+        const secret = process.env.JWT_SECRET || '';
+
+        if (secret.length < 10) {
+            throw new Error("JWT_SECRET is not set");
+        }
+
+
+        res.status(200).json({ message: "Data modified successfully" });
+
+
+    } catch (error) {
+        res.send(error)
+    }
+};
+
+
+
 module.exports = {
     toggleAdminRoleController,
-    getAllUsersController
+    getAllUsersController,
+    modifyUserProfile
 }
