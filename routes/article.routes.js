@@ -9,7 +9,7 @@ const {
 
 
 router.post('/add', addArticleController);
-router.get('/see/:id', getArticleByIdController);
+router.get('/id/:id', getArticleByIdController);
 router.get('/ean/:ean', getArticleByEanController);
 router.put('/modify/:id', modifyArticleByIdController);
 router.patch('/visibility/:id', chArticleVisibilityByIdController);

@@ -52,7 +52,7 @@ const toggleAdminRoleController = async (req, res) => {
     }
 };
 
-const modifyUserProfile = async (req, res) => {
+const modifyUserProfileController = async (req, res) => {
     const { authorization } = req.headers;
     const [strategy, jwt] = authorization.split(" ");
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
@@ -87,10 +87,74 @@ const modifyUserProfile = async (req, res) => {
     }
 };
 
+const toggleUserActiveController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+
+    try {
+        const { userId } = req.params;
+
+        const userFounded = await models.user.findByPk(userId);
+
+        if (!userFounded) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        if (userFounded.id === payload.userId) {
+            res.status(401).json({ message: 'You cannot inactivate yourself' });
+            return;
+        }
+
+        await userFounded.update({
+            isActive: !userFounded.isActive
+        });
+
+        let activityStatus = (userFounded.isActive) ? "active" : "inactive";
+
+        res.status(200).json({ message: `User ${userFounded.email} modified to ${activityStatus}` });
+
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong: ", error });
+    }
+};
+
+const deleteUserController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+
+    try {
+        const { userId } = req.body;
+
+        const userFounded = await models.user.findByPk(userId);
+
+        if (!userFounded) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        if (userFounded.id === payload.userId) {
+            res.status(401).json({ message: 'You cannot delete yourself' });
+            return;
+        }
+
+        await userFounded.destroy();
+
+        res.status(200).json({ message: `User ${userFounded.email} deleted successfully` });
+
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong: ", error });
+    }
+};
+
 
 
 module.exports = {
     toggleAdminRoleController,
     getAllUsersController,
-    modifyUserProfile
+    modifyUserProfileController,
+    toggleUserActiveController,
+    deleteUserController
 }

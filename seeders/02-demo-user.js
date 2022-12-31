@@ -20,6 +20,7 @@ module.exports = {
         email: "fvaldi@rockerstocker.com",
         rolId: 1,
         phone: "655112131",
+        isActive: 1,
         password: hashedPassword,
         createdAt: currentDate,
         updatedAt: currentDate
@@ -31,28 +32,31 @@ module.exports = {
         email: "avaldi@rockerstocker.com",
         rolId: 1,
         phone: "655122232",
+        isActive: 1,
+        password: hashedPassword,
+        createdAt: currentDate,
+        updatedAt: currentDate
+      },
+      {
+        id: 3,
+        name: "Gaspar",
+        surname: "Lopez",
+        email: "glopez@rockerstocker.com",
+        rolId: 2,
+        phone: "655132333",
+        isActive: 1,
         password: hashedPassword,
         createdAt: currentDate,
         updatedAt: currentDate
       },
       {
         id: 4,
-        name: "Gaspar",
-        surname: "Lopez",
-        email: "glopez@rockerstocker.com",
-        rolId: 2,
-        phone: "655132333",
-        password: hashedPassword,
-        createdAt: currentDate,
-        updatedAt: currentDate
-      },
-      {
-        id: 5,
         name: "Sonia",
         surname: "Molina",
         email: "smolina@rockerstocker.com",
         rolId: 2,
         phone: "655142434",
+        isActive: 1,
         password: hashedPassword,
         createdAt: currentDate,
         updatedAt: currentDate
