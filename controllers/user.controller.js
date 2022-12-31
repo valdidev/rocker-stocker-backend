@@ -6,7 +6,7 @@ const getAllUsersController = async (req, res) => {
         const usersFounded = await models.user.findAll();
 
         if (!usersFounded) {
-            res.status(404).json({ message: 'Users not found' });
+            res.status(404).json({ message: 'Users not found', success: false });
             return;
         }
 
@@ -14,10 +14,10 @@ const getAllUsersController = async (req, res) => {
             user.password = '-hidden-'
         });
 
-        res.status(200).json({ message: 'Users founded', data: usersFounded });
+        res.status(200).json({ message: 'Users founded', data: usersFounded, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 }
 
@@ -28,7 +28,7 @@ const toggleAdminRoleController = async (req, res) => {
         const userFounded = await models.user.findByPk(userId);
 
         if (!userFounded) {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'User not found', success: false });
             return;
         }
 
@@ -36,19 +36,19 @@ const toggleAdminRoleController = async (req, res) => {
             await userFounded.update({
                 rolId: 2
             });
-            res.status(200).json({ message: `${userFounded.email} demoted to USER rol` });
+            res.status(200).json({ message: `${userFounded.email} demoted to USER rol`, success: true });
             return;
         } else {
             await userFounded.update({
                 rolId: 1
             });
-            res.status(200).json({ message: `${userFounded.email} promoted to ADMIN rol` });
+            res.status(200).json({ message: `${userFounded.email} promoted to ADMIN rol`, success: true });
             return;
         }
 
 
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -57,9 +57,8 @@ const modifyUserProfileController = async (req, res) => {
     const [strategy, jwt] = authorization.split(" ");
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
 
-
     if (req.body.email !== payload.email) {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: 'Unauthorized', success: false });
     }
 
     try {
@@ -78,12 +77,10 @@ const modifyUserProfileController = async (req, res) => {
             throw new Error("JWT_SECRET is not set");
         }
 
-
-        res.status(200).json({ message: "Data modified successfully" });
-
+        res.status(200).json({ message: "Data modified successfully", success: true });
 
     } catch (error) {
-        res.send(error)
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -98,12 +95,12 @@ const toggleUserActiveController = async (req, res) => {
         const userFounded = await models.user.findByPk(userId);
 
         if (!userFounded) {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'User not found', success: false });
             return;
         }
 
         if (userFounded.id === payload.userId) {
-            res.status(401).json({ message: 'You cannot inactivate yourself' });
+            res.status(401).json({ message: 'You cannot inactivate yourself', success: false });
             return;
         }
 
@@ -113,10 +110,10 @@ const toggleUserActiveController = async (req, res) => {
 
         let activityStatus = (userFounded.isActive) ? "active" : "inactive";
 
-        res.status(200).json({ message: `User ${userFounded.email} modified to ${activityStatus}` });
+        res.status(200).json({ message: `User ${userFounded.email} modified to ${activityStatus}`, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -131,21 +128,21 @@ const deleteUserController = async (req, res) => {
         const userFounded = await models.user.findByPk(userId);
 
         if (!userFounded) {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'User not found', success: false });
             return;
         }
 
         if (userFounded.id === payload.userId) {
-            res.status(401).json({ message: 'You cannot delete yourself' });
+            res.status(401).json({ message: 'You cannot delete yourself', success: false });
             return;
         }
 
         await userFounded.destroy();
 
-        res.status(200).json({ message: `User ${userFounded.email} deleted successfully` });
+        res.status(200).json({ message: `User ${userFounded.email} deleted successfully`, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong: ", error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 

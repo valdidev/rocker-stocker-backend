@@ -33,10 +33,10 @@ const makeSaleController = async (req, res) => {
 
         await models.ArticleSales.bulkCreate(cart);
 
-        res.status(200).json({ message: "Sale maked successfully" });
+        res.status(200).json({ message: "Sale maked successfully", success: true });
 
     } catch (error) {
-        res.send(error);
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 }
 
@@ -57,14 +57,14 @@ const getSalesByUserIdController = async (req, res) => {
         });
 
         if (!salesFounded) {
-            res.status(404).json({ message: 'Sales not found' });
+            res.status(404).json({ message: 'Sales not found', success: false });
             return;
         }
 
-        res.status(200).json({ message: 'Sales founded', data: salesFounded });
+        res.status(200).json({ message: 'Sales founded', data: salesFounded, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -73,14 +73,14 @@ const getAllSalesController = async (req, res) => {
         const salesFounded = await models.sale.findAll();
 
         if (salesFounded.length === 0) {
-            res.status(404).json({ message: 'Sales not found' });
+            res.status(404).json({ message: 'Sales not found', success: false });
             return;
         }
 
-        res.status(200).json({ message: 'Sales founded', data: salesFounded });
+        res.status(200).json({ message: 'Sales founded', data: salesFounded, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
@@ -95,16 +95,14 @@ const getSaleDetailsByIdController = async (req, res) => {
         });
 
         if (!saleFounded) {
-            res.status(404).json({ message: 'Sale not found' });
+            res.status(404).json({ message: 'Sale not found', success: false });
             return;
         }
 
-        console.log(saleFounded);
-
-        res.status(200).json({ message: `Sale id ${saleId} founded`, data: saleFounded });
+        res.status(200).json({ message: `Sale id ${saleId} founded`, data: saleFounded, success: true });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
 
