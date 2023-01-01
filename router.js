@@ -6,8 +6,8 @@ const userRoutes = require('./routes/user.routes');
 const { authBearerMiddleware } = require('./middlewares/auth.middlewares');
 
 router.use('/auth', authRoutes);
-router.use('/user', userRoutes)
+router.use('/user', authBearerMiddleware, userRoutes)
 router.use('/article', authBearerMiddleware, articleRoutes);
-router.use('/sale', saleRoutes);
+router.use('/sale', authBearerMiddleware, saleRoutes);
 
 module.exports = router;
