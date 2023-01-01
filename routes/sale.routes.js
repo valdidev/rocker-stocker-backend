@@ -1,3 +1,5 @@
+const router = require('express').Router();
+
 const {
     makeSaleController,
     getSalesByUserIdController,
@@ -6,11 +8,11 @@ const {
 } = require('../controllers/sale.controllers');
 const { isAdminMiddleware } = require('../middlewares/auth.middlewares');
 
-const router = require('express').Router();
-
 router.post('/sell', makeSaleController);
+//only the admin or the user involved
 router.get('/mysales', getSalesByUserIdController);
 router.get('/details/:saleId', getSaleDetailsByIdController);
+// only admin
 router.get('/all', isAdminMiddleware, getAllSalesController);
 
 module.exports = router;
