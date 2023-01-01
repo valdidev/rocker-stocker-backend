@@ -22,6 +22,9 @@ const getAllUsersController = async (req, res) => {
 }
 
 const toggleAdminRoleController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
     try {
         const { userId } = req.body;
 
@@ -32,17 +35,22 @@ const toggleAdminRoleController = async (req, res) => {
             return;
         }
 
+        if (userFounded.id === payload.userId) {
+            res.status(401).json({ message: 'You cannot alter your role yourself', success: false });
+            return;
+        }
+
         if (userFounded.rolId === 1) {
             await userFounded.update({
                 rolId: 2
             });
-            res.status(200).json({ message: `${userFounded.email} demoted to USER rol`, success: true });
+            res.status(200).json({ message: `${userFounded.email} demoted to USER role`, success: true });
             return;
         } else {
             await userFounded.update({
                 rolId: 1
             });
-            res.status(200).json({ message: `${userFounded.email} promoted to ADMIN rol`, success: true });
+            res.status(200).json({ message: `${userFounded.email} promoted to ADMIN role`, success: true });
             return;
         }
 
