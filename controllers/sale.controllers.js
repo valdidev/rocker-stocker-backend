@@ -56,7 +56,7 @@ const getSalesByUserIdController = async (req, res) => {
             }
         });
 
-        if (!salesFounded) {
+        if (salesFounded.length === 0) {
             res.status(404).json({ message: 'Sales not found', success: false });
             return;
         }
@@ -94,7 +94,7 @@ const getSaleDetailsByIdController = async (req, res) => {
             }
         });
 
-        if (!saleFounded) {
+        if (saleFounded.length === 0) {
             res.status(404).json({ message: 'Sale not found', success: false });
             return;
         }
