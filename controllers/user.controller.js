@@ -21,6 +21,10 @@ const getAllUsersController = async (req, res) => {
     }
 }
 
+const getUserProfileByIdController = async (req, res) => {
+    res.send('user profile getter');
+};
+
 const toggleAdminRoleController = async (req, res) => {
     const { authorization } = req.headers;
     const [strategy, jwt] = authorization.split(" ");
@@ -162,5 +166,6 @@ module.exports = {
     getAllUsersController,
     modifyUserProfileController,
     toggleUserActiveController,
-    deleteUserController
+    deleteUserController,
+    getUserProfileByIdController
 }
