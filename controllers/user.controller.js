@@ -26,6 +26,8 @@ const getUserProfileByIdController = async (req, res) => {
     const [strategy, jwt] = authorization.split(" ");
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
 
+    let userBody = req.body;
+
     try {
         const { userId } = req.params;
 
@@ -37,6 +39,11 @@ const getUserProfileByIdController = async (req, res) => {
 
         if (!userFounded) {
             res.status(404).json({ message: 'User not found', success: false });
+            return;
+        }
+
+        if (userFounded.email !== payload.email && payload.rolId !== 1) {
+            res.status(401).json({ message: "You cannot see other profiles", success: false });
             return;
         }
 
