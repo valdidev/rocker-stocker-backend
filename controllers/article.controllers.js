@@ -1,28 +1,6 @@
 const models = require('../models/index');
 const jsonwebtoken = require('jsonwebtoken');
 
-const addArticleController = async (req, res) => {
-    const { authorization } = req.headers;
-    const [strategy, jwt] = authorization.split(" ");
-    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
-    const articleBody = req.body;
-
-    try {
-        await models.article.create({
-            name: articleBody.name,
-            brand: articleBody.brand,
-            category: articleBody.category,
-            price: articleBody.price,
-            units: articleBody.units,
-            ean: articleBody.ean,
-            userId: payload.userId
-        })
-
-        res.status(200).json({ message: "Article added successfully", success: true });
-    } catch (error) {
-        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
-    }
-};
 
 const getArticleByIdController = async (req, res) => {
     try {
@@ -55,6 +33,30 @@ const getArticleByEanController = async (req, res) => {
 
         res.status(200).json({ message: 'Article founded', data: articleFounded, success: true });
 
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+};
+
+// only admin
+const addArticleController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+    const articleBody = req.body;
+
+    try {
+        await models.article.create({
+            name: articleBody.name,
+            brand: articleBody.brand,
+            category: articleBody.category,
+            price: articleBody.price,
+            units: articleBody.units,
+            ean: articleBody.ean,
+            userId: payload.userId
+        })
+
+        res.status(200).json({ message: "Article added successfully", success: true });
     } catch (error) {
         res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
