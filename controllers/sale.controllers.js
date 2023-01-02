@@ -56,7 +56,7 @@ const getSalesByUserIdController = async (req, res) => {
             }
         });
 
-        if (!salesFounded) {
+        if (salesFounded.length === 0) {
             res.status(404).json({ message: 'Sales not found', success: false });
             return;
         }
@@ -85,8 +85,14 @@ const getAllSalesController = async (req, res) => {
 };
 
 const getSaleDetailsByIdController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+    const articleBody = req.body;
     try {
         const { saleId } = req.params;
+
+        
 
         const saleFounded = await models.ArticleSales.findAll({
             where: {
@@ -94,7 +100,7 @@ const getSaleDetailsByIdController = async (req, res) => {
             }
         });
 
-        if (!saleFounded) {
+        if (saleFounded.length === 0) {
             res.status(404).json({ message: 'Sale not found', success: false });
             return;
         }

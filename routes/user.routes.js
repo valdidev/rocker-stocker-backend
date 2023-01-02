@@ -4,13 +4,16 @@ const {
     modifyUserProfileController,
     toggleUserActiveController,
     deleteUserController } = require('../controllers/user.controller');
+const { isAdminMiddleware } = require('../middlewares/auth.middlewares');
 
 const router = require('express').Router();
 
-router.patch('/toggle', toggleAdminRoleController);
-router.get('/all', getAllUsersController);
+//only the admin or the user involved
 router.patch('/modify', modifyUserProfileController);
-router.patch('/active/:userId', toggleUserActiveController);
-router.delete('/delete', deleteUserController);
+// only admin
+router.patch('/toggle', isAdminMiddleware, toggleAdminRoleController);
+router.get('/all', isAdminMiddleware, getAllUsersController);
+router.patch('/active/:userId', isAdminMiddleware, toggleUserActiveController);
+router.delete('/delete', isAdminMiddleware, deleteUserController);
 
 module.exports = router;

@@ -3,17 +3,19 @@ const {
     addArticleController,
     modifyArticleByIdController,
     chArticleVisibilityByIdController,
-    deleteArticleByIdController, 
+    deleteArticleByIdController,
     getArticleByIdController,
-    getArticleByEanController} = require('../controllers/article.controllers');
+    getArticleByEanController } = require('../controllers/article.controllers');
+const { isAdminMiddleware } = require('../middlewares/auth.middlewares');
 
 
-router.post('/add', addArticleController);
 router.get('/id/:id', getArticleByIdController);
 router.get('/ean/:ean', getArticleByEanController);
-router.put('/modify/:id', modifyArticleByIdController);
-router.patch('/visibility/:id', chArticleVisibilityByIdController);
-router.delete('/delete/:id', deleteArticleByIdController);
+// only admin
+router.post('/add', isAdminMiddleware, addArticleController);
+router.put('/modify/:id', isAdminMiddleware, modifyArticleByIdController);
+router.patch('/visibility/:id', isAdminMiddleware, chArticleVisibilityByIdController);
+router.delete('/delete/:id', isAdminMiddleware, deleteArticleByIdController);
 
 
 // deluxe
