@@ -49,6 +49,23 @@ const isAdminMiddleware = (req, res, next) => {
     } else {
         res.status(403).json({ message: "You do not have permission", success: false });
     }
-}
+};
 
-module.exports = { authBearerMiddleware, isAdminMiddleware }
+
+const isAdminOrUserInvolvedMiddleware = (req, res, next) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+    if (payload.rolId === 1 || payload.userId === req.body.userId) {
+        next();
+    } else {
+        res.status(403).json({ message: "You do not have permission", success: false });
+    }
+};
+
+
+module.exports = {
+    authBearerMiddleware,
+    isAdminMiddleware,
+    isAdminOrUserInvolvedMiddleware
+};

@@ -6,11 +6,11 @@ const {
     getAllSalesController,
     getSaleDetailsByIdController
 } = require('../controllers/sale.controllers');
-const { isAdminMiddleware } = require('../middlewares/auth.middlewares');
+const { isAdminMiddleware, isAdminOrUserInvolvedMiddleware } = require('../middlewares/auth.middlewares');
 
 router.post('/sell', makeSaleController);
-//only the admin or the user involved
 router.get('/mysales', getSalesByUserIdController);
+// only the admin or user involved
 router.get('/details/:saleId', getSaleDetailsByIdController);
 // only admin
 router.get('/all', isAdminMiddleware, getAllSalesController);
