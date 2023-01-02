@@ -155,6 +155,26 @@ const chArticleVisibilityByIdController = async (req, res) => {
     }
 };
 
+const getInvisibleArticlesController = async (req, res) => {
+    try {
+        const articlesFounded = await models.article.findAll({
+            where: {
+                isVisible: false
+            }
+        });
+
+        if (articlesFounded.length === 0) {
+            res.status(404).json({ message: 'No invisible articles', success: false });
+            return;
+        }
+
+        res.status(200).json({ message: 'Articles founded', data: articlesFounded, success: true });
+
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+};
+
 const deleteArticleByIdController = async (req, res) => {
     try {
         const { id } = req.params;
@@ -183,5 +203,6 @@ module.exports = {
     deleteArticleByIdController,
     getArticleByIdController,
     getArticleByEanController,
-    getArticlesByCategoryController
+    getArticlesByCategoryController,
+    getInvisibleArticlesController
 };

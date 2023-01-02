@@ -6,7 +6,8 @@ const {
     deleteArticleByIdController,
     getArticleByIdController,
     getArticleByEanController,
-    getArticlesByCategoryController } = require('../controllers/article.controllers');
+    getArticlesByCategoryController, 
+    getInvisibleArticlesController} = require('../controllers/article.controllers');
 const { isAdminMiddleware } = require('../middlewares/auth.middlewares');
 
 
@@ -14,6 +15,7 @@ router.get('/id/:id', getArticleByIdController);
 router.get('/ean/:ean', getArticleByEanController);
 router.get('/category/:category', getArticlesByCategoryController);
 // only admin
+router.get('/invisibles', getInvisibleArticlesController);
 router.post('/add', isAdminMiddleware, addArticleController);
 router.put('/modify/:id', isAdminMiddleware, modifyArticleByIdController);
 router.patch('/visibility/:id', isAdminMiddleware, chArticleVisibilityByIdController);
