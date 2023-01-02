@@ -1,26 +1,7 @@
 const models = require('../models/index');
 const jsonwebtoken = require('jsonwebtoken');
 
-const getAllUsersController = async (req, res) => {
-    try {
-        const usersFounded = await models.user.findAll();
-
-        if (!usersFounded) {
-            res.status(404).json({ message: 'Users not found', success: false });
-            return;
-        }
-
-        usersFounded.forEach(user => {
-            user.password = '-hidden-'
-        });
-
-        res.status(200).json({ message: 'Users founded', data: usersFounded, success: true });
-
-    } catch (error) {
-        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
-    }
-}
-
+// only admin or user involved
 const getUserProfileByIdController = async (req, res) => {
     const { authorization } = req.headers;
     const [strategy, jwt] = authorization.split(" ");
@@ -53,6 +34,61 @@ const getUserProfileByIdController = async (req, res) => {
         res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
+
+const modifyUserProfileController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+
+    let userBody = req.body;
+
+    if (userBody.email !== payload.email && payload.rolId !== 1) {
+        res.status(401).json({ message: "You cannot modify other profiles", success: false });
+        return;
+    }
+
+    try {
+
+        await models.user.update({
+            name: userBody.name,
+            surname: userBody.surname,
+            phone: userBody.phone
+        }, { where: { email: userBody.email } });
+
+        const secret = process.env.JWT_SECRET || '';
+
+        if (secret.length < 10) {
+            throw new Error("JWT_SECRET is not set");
+        }
+
+        res.status(200).json({ message: "Data modified successfully", success: true });
+
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+};
+////////////
+
+// only admin
+const getAllUsersController = async (req, res) => {
+    try {
+        const usersFounded = await models.user.findAll();
+
+        if (!usersFounded) {
+            res.status(404).json({ message: 'Users not found', success: false });
+            return;
+        }
+
+        usersFounded.forEach(user => {
+            user.password = '-hidden-'
+        });
+
+        res.status(200).json({ message: 'Users founded', data: usersFounded, success: true });
+
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+}
 
 const toggleAdminRoleController = async (req, res) => {
     const { authorization } = req.headers;
@@ -87,39 +123,6 @@ const toggleAdminRoleController = async (req, res) => {
             return;
         }
 
-
-    } catch (error) {
-        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
-    }
-};
-
-const modifyUserProfileController = async (req, res) => {
-    const { authorization } = req.headers;
-    const [strategy, jwt] = authorization.split(" ");
-    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
-
-    let userBody = req.body;
-
-    if (userBody.email !== payload.email && payload.rolId !== 1) {
-        res.status(401).json({ message: "You cannot modify other profiles", success: false });
-        return;
-    }
-
-    try {
-
-        await models.user.update({
-            name: userBody.name,
-            surname: userBody.surname,
-            phone: userBody.phone
-        }, { where: { email: userBody.email } });
-
-        const secret = process.env.JWT_SECRET || '';
-
-        if (secret.length < 10) {
-            throw new Error("JWT_SECRET is not set");
-        }
-
-        res.status(200).json({ message: "Data modified successfully", success: true });
 
     } catch (error) {
         res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
@@ -187,7 +190,7 @@ const deleteUserController = async (req, res) => {
         res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
-
+////////////
 
 
 module.exports = {
@@ -197,4 +200,4 @@ module.exports = {
     toggleUserActiveController,
     deleteUserController,
     getUserProfileByIdController
-}
+};
