@@ -22,7 +22,29 @@ const getAllUsersController = async (req, res) => {
 }
 
 const getUserProfileByIdController = async (req, res) => {
-    res.send('user profile getter');
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+
+    try {
+        const { userId } = req.params;
+
+        const userFounded = await models.user.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        if (!userFounded) {
+            res.status(404).json({ message: 'User not found', success: false });
+            return;
+        }
+
+        res.status(200).json({ message: `User founded`, data: userFounded, success: true });
+
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
 };
 
 const toggleAdminRoleController = async (req, res) => {

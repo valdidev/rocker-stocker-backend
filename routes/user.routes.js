@@ -10,7 +10,7 @@ const { isAdminMiddleware } = require('../middlewares/auth.middlewares');
 const router = require('express').Router();
 
 //only the admin or the user involved
-router.get('/profile', getUserProfileByIdController);
+router.get('/profile/:userId', getUserProfileByIdController);
 router.patch('/modify', modifyUserProfileController);
 // only admin
 router.patch('/toggle', isAdminMiddleware, toggleAdminRoleController);
