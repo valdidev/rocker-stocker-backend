@@ -65,19 +65,20 @@ const modifyUserProfileController = async (req, res) => {
     const [strategy, jwt] = authorization.split(" ");
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
 
-    if (req.body.email !== payload.email) {
-        res.status(401).json({ message: 'Unauthorized', success: false });
+    let userBody = req.body;
+
+    if (userBody.email !== payload.email && payload.rolId !== 1) {
+        res.status(401).json({ message: "You cannot modify other profiles", success: false });
+        return;
     }
 
     try {
 
-        let data = req.body;
-
         await models.user.update({
-            name: data.name,
-            surname: data.surname,
-            phone: data.phone
-        }, { where: { email: data.email } });
+            name: userBody.name,
+            surname: userBody.surname,
+            phone: userBody.phone
+        }, { where: { email: userBody.email } });
 
         const secret = process.env.JWT_SECRET || '';
 
