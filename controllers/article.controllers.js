@@ -1,29 +1,8 @@
+const { Op } = require('sequelize');
 const models = require('../models/index');
 const jsonwebtoken = require('jsonwebtoken');
 
-const addArticleController = async (req, res) => {
-    const { authorization } = req.headers;
-    const [strategy, jwt] = authorization.split(" ");
-    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
-    const articleBody = req.body;
-
-    try {
-        await models.article.create({
-            name: articleBody.name,
-            brand: articleBody.brand,
-            category: articleBody.category,
-            price: articleBody.price,
-            units: articleBody.units,
-            ean: articleBody.ean,
-            userId: payload.userId
-        })
-
-        res.status(200).json({ message: "Article added successfully", success: true });
-    } catch (error) {
-        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
-    }
-};
-
+// detail view
 const getArticleByIdController = async (req, res) => {
     try {
         const { id } = req.params;
@@ -42,6 +21,7 @@ const getArticleByIdController = async (req, res) => {
     }
 };
 
+// for scan articles
 const getArticleByEanController = async (req, res) => {
     try {
         const { ean } = req.params;
@@ -55,6 +35,63 @@ const getArticleByEanController = async (req, res) => {
 
         res.status(200).json({ message: 'Article founded', data: articleFounded, success: true });
 
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+};
+
+// find by category
+const getArticlesByCategoryController = async (req, res) => {
+    try {
+        const { category } = req.params;
+
+        const articlesFounded = await models.article.findAll({
+            where: {
+                [Op.and]: [
+                    {
+                        category: {
+                            [Op.like]: `${category}%`
+                        }
+                    },
+                    {
+                        isVisible: true
+                    }
+                ]
+            }
+        });
+
+        if (!articlesFounded) {
+            res.status(404).json({ message: 'Article not found', success: false });
+            return;
+        }
+
+        res.status(200).json({ message: 'Article founded', data: articlesFounded, success: true });
+
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+};
+
+/////////////////
+// only admin
+const addArticleController = async (req, res) => {
+    const { authorization } = req.headers;
+    const [strategy, jwt] = authorization.split(" ");
+    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+    const articleBody = req.body;
+
+    try {
+        await models.article.create({
+            name: articleBody.name,
+            brand: articleBody.brand,
+            category: articleBody.category,
+            price: articleBody.price,
+            units: articleBody.units,
+            ean: articleBody.ean,
+            userId: payload.userId
+        })
+
+        res.status(200).json({ message: "Article added successfully", success: true });
     } catch (error) {
         res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
@@ -118,6 +155,26 @@ const chArticleVisibilityByIdController = async (req, res) => {
     }
 };
 
+const getInvisibleArticlesController = async (req, res) => {
+    try {
+        const articlesFounded = await models.article.findAll({
+            where: {
+                isVisible: false
+            }
+        });
+
+        if (articlesFounded.length === 0) {
+            res.status(404).json({ message: 'No invisible articles', success: false });
+            return;
+        }
+
+        res.status(200).json({ message: 'Articles founded', data: articlesFounded, success: true });
+
+    } catch (error) {
+        res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
+    }
+};
+
 const deleteArticleByIdController = async (req, res) => {
     try {
         const { id } = req.params;
@@ -137,6 +194,7 @@ const deleteArticleByIdController = async (req, res) => {
         res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
     }
 };
+/////////////////
 
 module.exports = {
     addArticleController,
@@ -144,5 +202,7 @@ module.exports = {
     chArticleVisibilityByIdController,
     deleteArticleByIdController,
     getArticleByIdController,
-    getArticleByEanController
-}
+    getArticleByEanController,
+    getArticlesByCategoryController,
+    getInvisibleArticlesController
+};
