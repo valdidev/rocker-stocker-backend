@@ -25,8 +25,25 @@ const authRegisterController = async (req, res) => {
         try {
             assertEmailIsValid(email);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(400).json({ message: error.message, success: false });
             return;
+        }
+        
+        // assert email does not exist
+        try {
+            const emailFounded = await models.user.findOne({
+                where: {
+                    email
+                }
+            })
+
+            if (emailFounded) {
+                res.status(400).json({ message: "Email already exists", success: false });
+                return;
+            }
+
+        } catch (error) {
+            res.status(500).json({ message: `Something went wrong: ${error}`, success: false });
         }
 
         const hash = encryptPassword(password);
@@ -51,6 +68,11 @@ const authLoginController = async (req, res) => {
         let userBody = req.body;
         let password = userBody.password;
         let email = userBody.email;
+
+        if (email.length === 0 || password.length === 0) {
+            res.status(400).json({ message: 'Fill in the text files', success: false });
+            return;
+        }
 
         const userFound = await models.user.findOne({
             where: { email: email, }
