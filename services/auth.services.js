@@ -29,6 +29,18 @@ const assertEmailIsValid = (email) => {
     }
 };
 
+const assertEmailIsUnique = async (email) => {
+    const emailFounded = await models.user.findOne({
+        where: {
+            email
+        }
+    })
+
+    if (emailFounded) {
+        throw new Error("Email already exists")
+    }
+}
+
 const encryptPassword = (password) => {
     const hash = crypto
       .createHmac("sha512", "no salt for now")
@@ -41,4 +53,5 @@ module.exports = {
     assertValidPassword,
     assertEmailIsValid,
     encryptPassword,
+    assertEmailIsUnique
 };
