@@ -104,6 +104,7 @@ const authLoginController = async (req, res) => {
         res.status(200).json({
             message: "Successfully logged in",
             user: {
+                id: userFound.id,
                 name: userFound.name,
                 email: userFound.email,
                 rolId: userFound.rolId,

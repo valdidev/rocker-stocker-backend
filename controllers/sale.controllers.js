@@ -46,23 +46,22 @@ const getSalesByUserIdController = async (req, res) => {
     const { authorization } = req.headers;
     const [strategy, jwt] = authorization.split(" ");
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
-    const articleBody = req.body;
+    const { userId } = req.params;
 
     try {
-        
-        if(payload.userId !== articleBody.userId && payload.rolId !== 1){
+        if (payload.userId !== Number(userId) && payload.rolId !== 1) {
             res.status(401).json({ message: "You cannot see other sales", success: false });
             return;
         }
 
         const salesFounded = await models.sale.findAll({
             where: {
-                userId: articleBody.userId
+                userId
             }
         });
 
         if (salesFounded.length === 0) {
-            res.status(404).json({ message: 'Sales not found', success: false });
+            res.status(200).json({ message: 'Sales not found', success: false });
             return;
         }
 
@@ -82,7 +81,7 @@ const getSaleDetailsByIdController = async (req, res) => {
 
         const saleIdFounded = await models.sale.findByPk(saleId);
 
-        if(!saleIdFounded){
+        if (!saleIdFounded) {
             res.status(404).json({ message: "Sale not found", success: false });
             return;
         }

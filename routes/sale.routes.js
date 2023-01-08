@@ -9,7 +9,7 @@ const {
 const { isAdminMiddleware, isAdminOrUserInvolvedMiddleware } = require('../middlewares/auth.middlewares');
 
 router.post('/sell', makeSaleController);
-router.get('/mysales', getSalesByUserIdController);
+router.get('/mysales/:userId', getSalesByUserIdController);
 // only the admin or user involved
 router.get('/details/:saleId', getSaleDetailsByIdController);
 // only admin
