@@ -28,7 +28,7 @@ const authRegisterController = async (req, res) => {
             res.status(400).json({ message: error.message, success: false });
             return;
         }
-        
+
         // assert email does not exist
         try {
             const emailFounded = await models.user.findOne({
@@ -103,7 +103,12 @@ const authLoginController = async (req, res) => {
 
         res.status(200).json({
             message: "Successfully logged in",
-            jwt: jwt,
+            user: {
+                name: userFound.name,
+                email: userFound.email,
+                rolId: userFound.rolId,
+                jwt: jwt
+            },
             success: true
         });
     } catch (error) {
