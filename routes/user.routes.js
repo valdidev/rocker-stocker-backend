@@ -16,6 +16,6 @@ router.patch('/modify', modifyUserProfileController);
 router.patch('/toggle', isAdminMiddleware, toggleAdminRoleController);
 router.get('/all', isAdminMiddleware, getAllUsersController);
 router.patch('/active/:userId', isAdminMiddleware, toggleUserActiveController);
-router.delete('/delete', isAdminMiddleware, deleteUserController);
+router.delete('/delete/:userId', isAdminMiddleware, deleteUserController);
 
 module.exports = router;

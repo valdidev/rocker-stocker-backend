@@ -168,7 +168,7 @@ const deleteUserController = async (req, res) => {
     const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
 
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
 
         const userFounded = await models.user.findByPk(userId);
 
