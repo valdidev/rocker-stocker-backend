@@ -7,12 +7,19 @@ const router = require('./router');
 const bp = require('body-parser');
 const cors = require('cors');
 
-const PORT = process.env.PORT;
+var corsOptions = {
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+};
 
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }))
 app.use(router);
+
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
