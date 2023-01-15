@@ -1,27 +1,17 @@
 const express = require('express');
 const app = express();
 const { sequelize } = require('./models');
-const db = require('./db/db');
+require('dotenv').config()
+
 const router = require('./router');
 const bp = require('body-parser');
-
-
 const cors = require('cors');
 
-//config cors options to AWS
-/* var corsOptions = {
-    origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
-    optionsSuccessStatus: 204
-}; */
+const PORT = process.env.PORT;
 
-let PORT = process.env.YOUR_PORT || process.env.PORT || 3000;
-
-// app.use(cors(corsOptions));
 app.use(cors())
 app.use(bp.json());
-app.use(bp.urlencoded({extended: true}))
+app.use(bp.urlencoded({ extended: true }))
 app.use(router);
 
 app.listen(PORT, () => {
